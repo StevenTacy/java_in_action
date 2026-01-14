@@ -6,6 +6,10 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -74,6 +78,24 @@ public class Apple {
 
     public void sortApplesByLambdaExpression(List<Apple> inventory) {
         inventory.sort(Comparator.comparingInt(Apple::getWeight));
+    }
+
+    /**
+     * key point of using lambda for interface is that the subsequent following by arrow is the implementation of that interface
+     */
+    public Thread getThreadByLambda() {
+        return new Thread(() -> System.out.println("creating a new thread"));
+    }
+
+    public void executorWithLambdaAndAnonymousExpr() {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Future<String> threadName = executor.submit(new Callable<String>() {
+            public String call() {
+                return Thread.currentThread().getName();
+            }
+        });
+
+        Future<String> lambdaThreadName = executor.submit(() -> Thread.currentThread().getName());
     }
 
     public static List<Apple> filterApplesByColor(List<Apple> inventory, Color color) {
