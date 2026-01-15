@@ -1,9 +1,4 @@
-package com.taco_tuesday;
-
-import com.impl_stream.Apple;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.java_inaction;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.

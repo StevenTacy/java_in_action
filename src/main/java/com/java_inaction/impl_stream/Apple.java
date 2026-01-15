@@ -1,4 +1,4 @@
-package com.impl_stream;
+package com.java_inaction.impl_stream;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +10,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static com.impl_stream.Apple.Color.GREEN;
+import static com.java_inaction.impl_stream.Apple.Color.GREEN;
 import static java.util.stream.Collectors.toList;
 
 @Data
