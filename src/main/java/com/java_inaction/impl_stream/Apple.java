@@ -1,15 +1,20 @@
 package com.java_inaction.impl_stream;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static com.java_inaction.impl_stream.Apple.Color.GREEN;
@@ -17,13 +22,24 @@ import static java.util.stream.Collectors.toList;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Apple {
+
     enum Color {
         GREEN, RED
     }
 
     private Color color;
     private int weight;
+    private String country;
+
+    /**
+     * constructor using for Function<Integer, Apple>
+     */
+    public Apple(int weight) {
+        this.weight = weight;
+    }
 
     /**
      * using ApplePredicate which will force every criterion to instantiate object and implements the ApplePredicate interface
@@ -50,6 +66,33 @@ public class Apple {
 
     public static List<Apple> getHeavyApples(List<Apple> inventory) {
         return inventory.stream().filter(a -> a.getWeight() > 150).collect(toList());
+    }
+
+    /**
+     * using an empty constructor which makes Supplier has functionality to create an empty Apple Object
+     */
+    public void initiatedAppleWLambda() {
+        Supplier<Apple> sa = Apple::new;
+        Apple a1 = sa.get();
+    }
+
+    public void initiatedAppleWFunctionLambda(int weight) {
+        Function<Integer, Apple> functionApple = Apple::new;
+        functionApple.apply(weight);
+        Function<Integer, Apple> functionAppleExplicit = (i) -> new Apple(i);
+    }
+
+    public List<Apple> map(List<Integer> list, Function<Integer, Apple> functionApple) {
+        var result = new ArrayList<Apple>();
+        for (Integer item : list) {
+            result.add(functionApple.apply(item));
+        }
+        return result;
+    }
+
+    public void mapIntegerToApple() {
+        var intList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        var appleList = map(intList, Apple::new);
     }
 
     /**
