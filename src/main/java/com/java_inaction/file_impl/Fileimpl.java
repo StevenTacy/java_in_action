@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Fileimpl {
     public File[] fileList() {
@@ -54,5 +59,16 @@ public class Fileimpl {
                 throw new RuntimeException(e);
             }
         };
+    }
+
+    public long uniqueNumberWords() {
+        long count = 0;
+        try (Stream<String> lines = Files.lines(Paths.get("data.txt"), Charset.defaultCharset())) {
+            count = lines.flatMap(l -> Arrays.stream(l.split(" "))).distinct().count();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return count;
     }
 }
