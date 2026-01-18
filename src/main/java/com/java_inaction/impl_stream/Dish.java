@@ -4,18 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 @Data
 @AllArgsConstructor
 public class Dish {
+
     public enum Type {
         FISH, MEAT, OTHERS
+    }
+
+    public enum CaloriesLevel {
+        FAT, NORMAL, DIET
     }
 
     private String name;
@@ -100,5 +107,69 @@ public class Dish {
                 .flatMap(a -> IntStream.rangeClosed(a, 100)
                         .mapToObj(b -> new double[]{a, b, Math.sqrt(a * a + b * b)})
                         .filter(t -> t[2] % 1 == 0));
+    }
+
+    public static Map<Type, List<Dish>> getDishByType(List<Dish> dishes) {
+        var dishesGroupingByFiltering = dishes.stream().collect(groupingBy(Dish::getType, filtering(
+                d -> d.getCalories() < 500, toList())));
+
+        var dishesGroupingNameByMapping = dishes.stream().collect(groupingBy(Dish::getType, mapping(Dish::getName, toList())));
+        return dishes.stream().collect(groupingBy(Dish::getType, filtering(
+                d -> d.getCalories() < 500, toList()
+        )));
+    }
+
+    public static Map<Type, Set<String>> getDishesNameByType(List<Dish> dishes) {
+        Map<String, List<String>> dishTags = new HashMap<>();
+        dishTags.put("pork", asList("greasy", "salty"));
+        dishTags.put("beef", asList("salty", "roasted"));
+        dishTags.put("chicken", asList("fried", "crisp"));
+        dishTags.put("french fries", asList("greasy", "fried"));
+        dishTags.put("rice", asList("light", "natural"));
+        dishTags.put("season fruit", asList("fresh", "natural"));
+        dishTags.put("pizza", asList("tasty", "salty"));
+        dishTags.put("prawns", asList("tasty", "roasted"));
+        dishTags.put("salmon", asList("delicious", "fresh"));
+
+        return dishes.stream().collect(groupingBy(Dish::getType, flatMapping(dish -> dishTags.get(dish.getName()).stream(), toSet())));
+    }
+
+    public static void multiGroupingBy(List<Dish> dishes) {
+        var dishesGroupByTypeGroupByCaloriesLevel = dishes.stream().collect(groupingBy(
+                Dish::getType, groupingBy(
+                        dish -> {
+                            if (dish.getCalories() < 400) return CaloriesLevel.DIET;
+                            else if (dish.getCalories() < 700) return CaloriesLevel.NORMAL;
+                            else return CaloriesLevel.FAT;
+                        }
+                )));
+    }
+
+    public static void groupingByMaxCalories(List<Dish> dishes) {
+        // note this optional will not create the mapping cuz it might be null and due to stream is lazily forming pipeline
+        // it only initialize the key when it first met the corresponding value in this case (max result)
+        // therefor, if maxby has nothing to deal with it won't instantiated the optional object
+        var maxByCalories = dishes.stream().collect(groupingBy(Dish::getType, maxBy(Comparator.comparingInt(Dish::getCalories))));
+        // using collectiongAndThen -> collecting the result and operate a function.map()
+        var collectingAndThenMaxByCalories = dishes.stream().collect(
+                groupingBy(Dish::getType, collectingAndThen(maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
+    }
+
+    public static void mappingCaloriesByTypeByHashSet(List<Dish> dishes) {
+        var mappingCaloriesByTypeByHashSet = dishes.stream().collect(groupingBy(Dish::getType,
+                mapping(
+                        dish -> {
+                            if (dish.getCalories() < 400) return CaloriesLevel.DIET;
+                            else if (dish.getCalories() < 700) return CaloriesLevel.NORMAL;
+                            else return CaloriesLevel.FAT;
+                        }, toCollection(HashSet::new))));
+    }
+
+    public static void partitionByVegetarian(List<Dish> dishes) {
+        var veganAndNonVeganMap = dishes.stream().collect(partitioningBy(Dish::isVegetarian));
+        var veganAndNonVeganMapGroupByType = dishes.stream().collect(partitioningBy(Dish::isVegetarian,
+                groupingBy(Dish::getType)));
+        var veganAndNonVeganMaxCaloriesDish = dishes.stream().collect(partitioningBy(Dish::isVegetarian,
+                collectingAndThen(maxBy(Comparator.comparingInt(Dish::getCalories)), Optional::get)));
     }
 }

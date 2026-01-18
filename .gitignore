@@ -6,6 +6,7 @@ build/
 .kotlin
 .sdkmanrc
 .gitignore
+Makefile
 
 ### IntelliJ IDEA ###
 .idea
