@@ -11,4 +11,5 @@ public class Transaction {
     private Trader trader;
     private int year;
     private long value;
+    private String referenceCode;
 }

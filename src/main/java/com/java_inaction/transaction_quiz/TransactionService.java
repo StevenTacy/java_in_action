@@ -1,10 +1,7 @@
 package com.java_inaction.transaction_quiz;
 
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TransactionService {
@@ -77,5 +74,23 @@ public class TransactionService {
         Optional<Long> minVal = transactions.stream().map(Transaction::getValue).reduce(Long::min);
         Optional<Transaction> minComparator = transactions.stream().min(Comparator.comparing(Transaction::getValue));
         return minComparator.orElseGet(Transaction::new);
+    }
+
+    public void filterFirstDigitOfTransaction() {
+        // error-prone -> dealing with two objects, 1. iterate using iterator, but remove using transaction
+        for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext(); ) {
+            Transaction transaction = iterator.next();
+            if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
+                transactions.remove(transaction);
+            }
+        }
+        for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext(); ) {
+            Transaction transaction = iterator.next();
+            if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
+                iterator.remove();
+            }
+        }
+
+        transactions.removeIf(t -> Character.isDigit(t.getReferenceCode().charAt(0)));
     }
 }
