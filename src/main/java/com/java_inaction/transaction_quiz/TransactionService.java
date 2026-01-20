@@ -11,12 +11,12 @@ public class TransactionService {
     static Trader alan = new Trader("Alan", "Cambridge");
     static Trader brian = new Trader("Brian", "Cambridge");
     static List<Transaction> transactions = Arrays.asList(
-            new Transaction(brian, 2011, 300),
-            new Transaction(raoul, 2012, 1000),
-            new Transaction(raoul, 2011, 400),
-            new Transaction(mario, 2012, 710),
-            new Transaction(mario, 2012, 700),
-            new Transaction(alan, 2012, 950)
+            new Transaction(brian, 2011, 300, "231231356"),
+            new Transaction(raoul, 2012, 1000, "231231356"),
+            new Transaction(raoul, 2011, 400, "231231356"),
+            new Transaction(mario, 2012, 710, "231231356"),
+            new Transaction(mario, 2012, 700, "231231356"),
+            new Transaction(alan, 2012, 95, "2312313560")
     );
 
     public List<Transaction> getTransactionsIn2011() {
