@@ -10,13 +10,16 @@ import java.util.stream.Collectors;
 @Data
 public class Person {
     private Optional<Car> car;
+    private int age;
 
     public Set<String> getCarInsuranceName(List<Person> persons) {
-        return persons.stream()
+        var optionalStream = persons.stream()
                 .map(Person::getCar)
                 .map(optCar -> optCar.flatMap(Car::getInsurance))
-                .map(optIns -> optIns.map(Insurance::getName))
-                .flatMap(Optional::stream)
+                .map(optIns -> optIns.map(Insurance::getName));
+
+        return optionalStream.filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toSet());
     }
 }

@@ -11,14 +11,14 @@ repositories {
 }
 
 dependencies {
-//    implementation 'org.openjdk.jmh:jmh-core:1.37'
+    implementation 'org.openjdk.jmh:jmh-core:1.37'
     compileOnly 'org.projectlombok:lombok:1.18.30' // Use the latest version
     annotationProcessor 'org.projectlombok:lombok:1.18.30' // Use the same version
     jmhCompileOnly 'org.projectlombok:lombok:1.18.30'
     jmhAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
 test {
